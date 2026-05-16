@@ -1,0 +1,21 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<h2>Banners Dashboard</h2>
+<a href="{% url 'banner_add' %}" class="btn btn-success" style="margin-bottom: 20px;">Add New Banner</a>
+
+<div style="display: flex; flex-wrap: wrap; gap: 20px;">
+    {% for banner in banners %}
+    <div style="border: 1px solid #ddd; padding: 10px; width: 220px; text-align: center;">
+        <img src="{{ banner.image.url }}" alt="{{ banner.title }}" style="width:100%; height:150px; object-fit:cover;">
+        <h3>{{ banner.title }}</h3>
+        <p>{{ banner.subtitle }}</p>
+        <a href="{% url 'banner_edit' banner.id %}" class="btn btn-primary">Edit</a>
+        <a href="{% url 'banner_delete' banner.id %}" class="btn btn-danger">Delete</a>
+    </div>
+    {% empty %}
+        <p>No banners found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

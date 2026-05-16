@@ -1,0 +1,153 @@
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+    <!-- Left: Add/Edit Item -->
+    <div style="width: 300px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <h3>{% if item %}Edit Item{% else %}Add New Item{% endif %}</h3>
+
+        {% if form.errors %}
+            <div style="color:red; margin-bottom: 10px;">
+                {{ form.errors }}
+            </div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <input type="hidden" name="form_type" value="jewelry">
+            {% if item %}
+                <input type="hidden" name="edit_id" value="{{ item.id }}">
+            {% endif %}
+
+            <div style="margin-bottom: 15px;">
+                {{ form.image.label_tag }}<br>
+                {{ form.image }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                {{ form.name.label_tag }}<br>
+                {{ form.name }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                {{ form.price.label_tag }}<br>
+                {{ form.price }}
+            </div>
+            <div style="margin-bottom: 15px;">
+                {{ form.description.label_tag }}<br>
+                {{ form.description }}
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button type="submit" style="padding: 10px 20px; background: gold; border: none; cursor: pointer; border-radius: 5px;">
+                    {% if item %}Update{% else %}Add{% endif %}
+                </button>
+                {% if item %}
+                    <a href="{% url 'inventory_dashboard' %}" style="padding: 10px 20px; background: #ccc; border-radius: 5px; text-decoration: none; color: #333;">
+                        Cancel
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Right: Items Grid -->
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+        {% for i in items %}
+        <div style="background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;">
+
+            {% if i.image %}
+                <img src="{{ i.image.url }}" alt="{{ i.name }}" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="No Image" style="width: 100%; height: 150px; object-fit: cover; border-radius: 5px;">
+            {% endif %}
+
+            <h4>{{ i.name }}</h4>
+            <p>${{ i.price }}</p>
+
+            <div style="display: flex; justify-content: center; gap: 5px; margin-top: 10px;">
+                <a href="?edit={{ i.id }}" style="padding: 5px 10px; background: #3498db; color: #fff; border-radius: 5px; text-decoration: none;">Edit</a>
+                <form method="POST" action="{% url 'delete_item' i.id %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" style="padding: 5px 10px; background: red; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+
+<hr style="margin: 50px 0;">
+
+<h2 style="margin-bottom: 20px;">Manage Home Banners</h2>
+
+<div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+    <!-- Banner Form -->
+    <form method="POST" enctype="multipart/form-data" style="width: 300px; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}
+        <input type="hidden" name="form_type" value="banner">
+
+        <h3 style="margin-bottom: 15px;">Add Banner</h3>
+
+        {% if banner_form.errors %}
+            <div style="color:red; margin-bottom: 10px;">
+                {{ banner_form.errors }}
+            </div>
+        {% endif %}
+
+        <div style="margin-bottom: 10px;">
+            {{ banner_form.title.label_tag }}<br>
+            {{ banner_form.title }}
+        </div>
+        <div style="margin-bottom: 10px;">
+            {{ banner_form.subtitle.label_tag }}<br>
+            {{ banner_form.subtitle }}
+        </div>
+        <div style="margin-bottom: 10px;">
+    <label>Banner Type</label><br>
+    <select name="banner_type" style="width:100%; padding:8px;">
+        <option value="top">Top Banner</option>
+        <option value="bottom1">Bottom Banner 1</option>
+        <option value="bottom2">Bottom Banner 2</option>
+        <option value="bottom3">Bottom Banner 3</option>
+    </select>
+</div>
+        <div style="margin-bottom: 10px;">
+            {{ banner_form.image.label_tag }}<br>
+            {{ banner_form.image }}
+        </div>
+
+        <button type="submit" style="padding: 10px 20px; background: gold; border: none; cursor: pointer; border-radius: 5px;">
+            Save Banner
+        </button>
+    </form>
+
+    <!-- Existing Banners Preview -->
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+        {% for banner in banners %}
+        <div style="background: #fff; padding: 10px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;">
+            {% if banner.image %}
+                <img src="{{ banner.image.url }}" alt="{{ banner.title }}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px;">
+            {% else %}
+                <img src="{% static 'images/placeholder.png' %}" alt="No Image" style="width: 100%; height: 120px; object-fit: cover; border-radius: 5px;">
+            {% endif %}
+            <h4>{{ banner.title }}</h4>
+            <p>{{ banner.subtitle }}</p>
+
+            <div style="display: flex; justify-content: center; gap: 5px; margin-top: 10px;">
+                <a href="{% url 'edit_banner' banner.id %}" style="padding: 5px 10px; background: #3498db; color: #fff; border-radius: 5px; text-decoration: none;">Edit</a>
+                <form method="POST" action="{% url 'delete_banner' banner.id %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" style="padding: 5px 10px; background: red; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% empty %}
+            <p>No banners added yet.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

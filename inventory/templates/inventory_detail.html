@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ jewelry.name }} - Jewelry Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .jewelry-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .thumb-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            border-radius: 5px;
+        }
+        .thumb-image:hover, .thumb-image.active {
+            border-color: #c39a6b;
+        }
+        .specs-table td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .price-display {
+            color: #c39a6b;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        .stock-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        .in-stock {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .out-stock {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .back-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+        }
+        .back-btn:hover {
+            background-color: #e9ecef;
+        }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <a href="{% url 'inventory:jewelry_list' %}" class="btn back-btn mb-4">
+            ← Back to Collection
+        </a>
+        
+        <div class="row">
+            <!-- Image Gallery -->
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <img id="mainImage" src="{% if jewelry.image %}{{ jewelry.image.url }}{% else %}https://via.placeholder.com/600x400/ccc/999?text=No+Image{% endif %}" 
+                         class="jewelry-image" alt="{{ jewelry.name }}">
+                </div>
+                
+                <div class="d-flex gap-2">
+                    {% if jewelry.image %}
+                        <img src="{{ jewelry.image.url }}" class="thumb-image active" 
+                             onclick="changeImage(this.src)" alt="Main view">
+                    {% endif %}
+                    {% if jewelry.image2 %}
+                        <img src="{{ jewelry.image2.url }}" class="thumb-image" 
+                             onclick="changeImage(this.src)" alt="Side view">
+                    {% endif %}
+                    {% if jewelry.image3 %}
+                        <img src="{{ jewelry.image3.url }}" class="thumb-image" 
+                             onclick="changeImage(this.src)" alt="Detail view">
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Product Details -->
+            <div class="col-md-6">
+                <h1 class="mb-3">{{ jewelry.name }}</h1>
+                
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="price-display">${{ jewelry.price }}</span>
+                    <span class="stock-status {% if jewelry.in_stock %}in-stock{% else %}out-stock{% endif %}">
+                        {% if jewelry.in_stock %}
+                            ✓ In Stock ({{ jewelry.stock }} available)
+                        {% else %}
+                            ✗ Out of Stock
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <p class="text-muted mb-4">SKU: {{ jewelry.sku }}</p>
+                
+                <div class="mb-4">
+                    <h5>Description</h5>
+                    <p class="lead">{{ jewelry.description }}</p>
+                </div>
+                
+                <!-- Specifications Table -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Specifications</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="specs-table w-100">
+                            <tr>
+                                <td><strong>Category</strong></td>
+                                <td>{{ jewelry.get_category_display }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Material</strong></td>
+                                <td>{{ jewelry.get_material_display }}</td>
+                            </tr>
+                            {% if jewelry.purity %}
+                            <tr>
+                                <td><strong>Purity</strong></td>
+                                <td>{{ jewelry.get_purity_display }}</td>
+                            </tr>
+                            {% endif %}
+                            {% if jewelry.weight %}
+                            <tr>
+                                <td><strong>Weight</strong></td>
+                                <td>{{ jewelry.weight }} grams</td>
+                            </tr>
+                            {% endif %}
+                            <tr>
+                                <td><strong>Added On</strong></td>
+                                <td>{{ jewelry.created_at|date:"F d, Y" }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Last Updated</strong></td>
+                                <td>{{ jewelry.updated_at|date:"F d, Y" }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- Admin Actions (for staff users) -->
+                {% if user.is_staff %}
+                <div class="card mb-4">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Admin Actions</h6>
+                    </div>
+                    <div class="card-body">
+                        <a href="/admin/inventory/jewelryitem/{{ jewelry.id }}/change/" 
+                           class="btn btn-warning btn-sm me-2">
+                            <i class="bi bi-pencil"></i> Edit in Admin
+                        </a>
+                        <a href="/admin/inventory/jewelryitem/{{ jewelry.id }}/delete/" 
+                           class="btn btn-danger btn-sm">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Add to Cart Button (Optional - for future e-commerce) -->
+                {% if jewelry.in_stock %}
+                <div class="mt-4">
+                    <button class="btn btn-primary btn-lg w-100" id="addToCartBtn">
+                        <i class="bi bi-cart-plus"></i> Add to Cart
+                    </button>
+                </div>
+                {% else %}
+                <div class="mt-4">
+                    <button class="btn btn-secondary btn-lg w-100" disabled>
+                        Currently Unavailable
+                    </button>
+                    <p class="text-muted text-center mt-2">
+                        This item is out of stock. Check back soon!
+                    </p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Related Items Section (Optional) -->
+        <div class="row mt-5">
+            <div class="col-12">
+                <h3 class="mb-4">You May Also Like</h3>
+                <div class="row">
+                    {% for related in jewelry.get_related_items|slice:":3" %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            {% if related.image %}
+                            <img src="{{ related.image.url }}" class="card-img-top" alt="{{ related.name }}" style="height: 200px; object-fit: cover;">
+                            {% endif %}
+                            <div class="card-body">
+                                <h5 class="card-title">{{ related.name|truncatechars:30 }}</h5>
+                                <p class="card-text text-muted">{{ related.get_category_display }}</p>
+                                <p class="price-tag">${{ related.price }}</p>
+                                <a href="{% url 'inventory:jewelry_detail' related.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Image gallery functionality
+        function changeImage(src) {
+            document.getElementById('mainImage').src = src;
+            
+            // Update active thumbnail
+            document.querySelectorAll('.thumb-image').forEach(img => {
+                img.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+        
+        // Add to cart functionality (placeholder)
+        document.getElementById('addToCartBtn')?.addEventListener('click', function() {
+            alert('Add to cart functionality coming soon!');
+            // You can implement AJAX call here in the future
+        });
+    </script>
+    
+    <!-- Add Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

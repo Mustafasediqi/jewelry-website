@@ -1,0 +1,143 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            font-family: "Segoe UI", sans-serif;
+            display: flex;
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* LEFT SIDE IMAGE */
+        .left-side {
+            flex: 1;
+            background: url('{% static "images/signup_imag.jpg" %}') center/cover no-repeat;
+        }
+
+        /* RIGHT SIDE LOGIN */
+        .right-side {
+            flex: 1;
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .login-box {
+            width: 360px;
+            padding: 35px;
+            background: #111;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+
+        .login-box h2 {
+            margin-bottom: 25px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .login-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 14px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #222;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .login-box input::placeholder {
+            color: #aaa;
+        }
+
+        .login-box input:focus {
+            outline: none;
+            border-color: #888;
+            box-shadow: 0 0 8px rgba(255,255,255,0.2);
+        }
+
+        .login-box button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            background: #fff;
+            color: #000;
+            transition: 0.3s ease;
+        }
+
+        .login-box button:hover {
+            background: #e6e6e6;
+            transform: translateY(-2px);
+        }
+
+        .error {
+            color: #ff5555;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .login-box p {
+            margin-top: 14px;
+            font-size: 14px;
+        }
+
+        .login-box a {
+            color: #ccc;
+            text-decoration: none;
+        }
+
+        .login-box a:hover {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="left-side"></div>
+
+    <div class="right-side">
+        <div class="login-box">
+            <h2>Welcome Back</h2>
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="password" name="password" placeholder="Password" required>
+
+                <button type="submit">Login</button>
+            </form>
+
+            <p>Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

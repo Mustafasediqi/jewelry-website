@@ -1,0 +1,181 @@
+{% load static %}
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+
+<!-- Bootstrap CSS (if not already added) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap Icons (FIXES YOUR ICON ISSUE) -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+<nav class="navbar navbar-expand-lg luxury-navbar">
+    <div class="container-fluid px-4 d-flex justify-content-between align-items-center">
+
+        <!-- LEFT: Logo -->
+        <a class="navbar-brand d-flex align-items-center"
+           href="{% url 'inventory_list' %}">
+            <img src="{% static 'images/zurluxe.png' %}" class="logo me-2">
+            <span class="brand-text">ZarLuxe</span>
+        </a>
+
+        <!-- CENTER: Links -->
+        <ul class="navbar-nav mx-auto text-center">
+            <li class="nav-item mx-3">
+                <a class="nav-link" href="{% url 'inventory_list' %}">Home</a>
+            </li>
+            <li class="nav-item mx-3">
+                <a class="nav-link" href="{% url 'inventory_collection' %}">Collection</a>
+            </li>
+        </ul>
+
+        <!-- RIGHT -->
+        <ul class="navbar-nav d-flex align-items-center">
+
+            <!-- Search -->
+            <li class="nav-item me-3">
+                <form class="d-flex luxury-search" method="GET" action="{% url 'inventory_list' %}">
+                    <input class="form-control form-control-sm"
+                           type="search" name="q" placeholder="Search jewelry...">
+                </form>
+            </li>
+
+            <!-- Account -->
+            <li class="nav-item dropdown">
+                <a class="nav-link account-link" href="#" data-bs-toggle="dropdown">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+
+                {% if user.is_authenticated %}
+                <ul class="dropdown-menu dropdown-menu-end luxury-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'signup' %}">Add Account</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+                {% else %}
+                <ul class="dropdown-menu dropdown-menu-end luxury-dropdown">
+                    <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                    <li><a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a></li>
+                </ul>
+                {% endif %}
+            </li>
+
+        </ul>
+    </div>
+</nav>
+
+<style>
+/* GLASS WHITE NAVBAR */
+.luxury-navbar {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0.9rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05);
+    font-family: 'Poppins', sans-serif;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+}
+
+/* Scroll effect */
+.luxury-navbar.scrolled {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+/* LOGO */
+.logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid rgba(212,175,55,0.5);
+}
+
+/* BRAND TEXT */
+.brand-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #000;
+    letter-spacing: 1px;
+}
+
+/* NAV LINKS */
+.luxury-navbar .nav-link {
+    color: #222 !important;
+    font-weight: 500;
+    position: relative;
+}
+
+/* Gold underline hover */
+.luxury-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #d4af37;
+    transition: 0.3s;
+}
+
+.luxury-navbar .nav-link:hover::after {
+    width: 100%;
+}
+
+/* SEARCH */
+.luxury-search input {
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    padding: 4px 12px;
+    transition: 0.3s;
+}
+
+.luxury-search input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 5px rgba(212,175,55,0.3);
+}
+
+/* ACCOUNT ICON */
+.account-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: rgba(212,175,55,0.1);
+    color: #000 !important;
+    font-size: 1.2rem;
+    transition: 0.3s;
+}
+
+.account-link:hover {
+    background: #d4af37;
+    color: #fff !important;
+}
+
+/* DROPDOWN */
+.luxury-dropdown {
+    border-radius: 10px;
+    border: none;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.luxury-dropdown .dropdown-item {
+    font-size: 0.9rem;
+}
+
+.luxury-dropdown .dropdown-item:hover {
+    background-color: #f8f8f8;
+}
+</style>
+
+<!-- Scroll Script -->
+<script>
+window.addEventListener("scroll", function() {
+    const navbar = document.querySelector(".luxury-navbar");
+    navbar.classList.toggle("scrolled", window.scrollY > 10);
+});
+</script>

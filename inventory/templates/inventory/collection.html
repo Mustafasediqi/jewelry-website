@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewelry Collection</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #fafafa; color: #111; }
+
+        /* ── PAGE HEADER ── */
+        .collection-header {
+            background: #111;
+            padding: 70px 20px 50px;
+            text-align: center;
+        }
+        .collection-header .sub {
+            font-size: 11px;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 12px;
+        }
+        .collection-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0;
+        }
+        .collection-header .divider {
+            width: 50px;
+            height: 1px;
+            background: #fff;
+            margin: 18px auto 0;
+            opacity: 0.3;
+        }
+
+        /* ── GRID ── */
+        .collection-section {
+            padding: 60px 40px 80px;
+        }
+
+        /* ── CARD ── */
+        .jewelry-card {
+            background: #fff;
+            border: 1px solid #ececec;
+            border-radius: 0;
+            overflow: hidden;
+            transition: box-shadow 0.35s ease, transform 0.35s ease;
+            height: 100%;
+        }
+        .jewelry-card:hover {
+            box-shadow: 0 16px 48px rgba(0,0,0,0.10);
+            transform: translateY(-4px);
+        }
+
+        /* image wrapper for overlay */
+        .card-img-wrapper {
+            position: relative;
+            overflow: hidden;
+        }
+        .card-img-wrapper img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.55s ease;
+        }
+        .jewelry-card:hover .card-img-wrapper img {
+            transform: scale(1.06);
+        }
+
+        /* hover overlay on image */
+        .card-img-overlay-custom {
+            position: absolute;
+            inset: 0;
+            background: rgba(0,0,0,0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.35s ease;
+        }
+        .jewelry-card:hover .card-img-overlay-custom {
+            background: rgba(0,0,0,0.28);
+        }
+        .overlay-btn {
+            opacity: 0;
+            transform: translateY(12px);
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #fff;
+            text-decoration: none;
+            padding: 11px 28px;
+            border: 1.5px solid rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            transition: opacity 0.3s ease, transform 0.3s ease, background 0.3s ease;
+        }
+        .jewelry-card:hover .overlay-btn {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .overlay-btn:hover {
+            background: rgba(255,255,255,0.25);
+            color: #fff;
+        }
+
+        /* card body */
+        .jewelry-card .card-body {
+            padding: 20px 18px 22px;
+        }
+        .jewelry-card .item-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 6px;
+        }
+        .jewelry-card .item-price {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 4px;
+        }
+        .jewelry-card .item-likes {
+            font-size: 11px;
+            color: #aaa;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+        .jewelry-card .item-likes span {
+            color: #c0392b;
+        }
+
+        /* view details button */
+        .btn-view {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111;
+            border: 1.5px solid #111;
+            background: #fff;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .btn-view:hover {
+            background: #111;
+            color: #fff;
+        }
+
+        /* empty state */
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .empty-state p {
+            font-size: 14px;
+            color: #aaa;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── FOOTER ── */
+        .footer { background-color: #111; color: #fff; padding: 60px 40px 30px; }
+        .footer a { color: #aaa; text-decoration: none; transition: all 0.3s ease; display: block; margin: 6px 0; font-size: 13px; }
+        .footer a:hover { color: #fff; transform: translateX(3px); }
+        .footer h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; color: #fff; }
+        .footer-columns { display: flex; flex-wrap: wrap; gap: 50px; }
+        .footer-column { min-width: 150px; }
+        .footer-bottom { margin-top: 50px; border-top: 1px solid #222; padding-top: 20px; font-size: 12px; text-align: center; color: #555; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+    {% include 'inventory/partials/navbar.html' %}
+
+    <!-- PAGE HEADER -->
+    <div class="collection-header">
+        <p class="sub">Handcrafted with Love</p>
+        <h2>Our Collection</h2>
+        <div class="divider"></div>
+    </div>
+
+    <!-- COLLECTION GRID -->
+    <div class="collection-section">
+        <div class="container-fluid px-3">
+            <div class="row g-4">
+                {% for item in items %}
+                <div class="col-md-3 col-sm-6">
+                    <div class="jewelry-card">
+
+                        <!-- Image + hover overlay -->
+                        <div class="card-img-wrapper">
+                            {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x200?text=No+Image" alt="No Image">
+                            {% endif %}
+                            <div class="card-img-overlay-custom">
+                                <a href="{% url 'inventory_details' item.id %}" class="overlay-btn">Quick View</a>
+                            </div>
+                        </div>
+
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <p class="item-name">{{ item.name }}</p>
+                            <p class="item-price">${{ item.price }}</p>
+                            <p class="item-likes"><span>♥</span> {{ item.like_set.count }} likes</p>
+                            <a href="{% url 'inventory_details' item.id %}" class="btn-view">View Details</a>
+                        </div>
+
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-state col-12">
+                    <p>No items available in the collection.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-columns">
+            <div class="footer-column">
+                <h4>Customer Service</h4>
+                <a href="#">Help Center</a>
+                <a href="#">Delivery & Pick Up</a>
+                <a href="#">Return & Exchange Policy</a>
+                <a href="#">Jewelry Services</a>
+            </div>
+            <div class="footer-column">
+                <h4>Orders & Payments</h4>
+                <a href="#">Order Status</a>
+                <a href="#">Protection Plans</a>
+                <a href="#">Price Match Policy</a>
+                <a href="#">Vault Rewards</a>
+            </div>
+            <div class="footer-column">
+                <h4>Company</h4>
+                <a href="#">About Us</a>
+                <a href="#">Who We Are</a>
+                <a href="#">Careers</a>
+                <a href="#">Corporate Responsibility</a>
+            </div>
+            <div class="footer-column">
+                <h4>Education & Guides</h4>
+                <a href="#">Jewelry 101</a>
+                <a href="#">Diamonds</a>
+                <a href="#">Engagement Guide</a>
+                <a href="#">Gemstones</a>
+                <a href="#">Birthstone Guide</a>
+            </div>
+        </div>
+        <div class="footer-bottom">&copy; 2026 Your Jewelry Store. All Rights Reserved.</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

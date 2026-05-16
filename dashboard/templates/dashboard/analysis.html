@@ -1,0 +1,49 @@
+{% extends "dashboard/base.html" %}
+
+{% block content %}
+
+<h2>Dashboard Analysis</h2>
+
+<!-- SHOW NUMBERS -->
+<div style="display:flex; gap:20px; margin-bottom:20px;">
+    <div>
+        <h3>Products</h3>
+        <p>{{ total_products }}</p>
+    </div>
+
+    <div>
+        <h3>Revenue</h3>
+        <p>{{ total_revenue }}</p>
+    </div>
+
+    <div>
+        <h3>Sold</h3>
+        <p>{{ total_sold }}</p>
+    </div>
+</div>
+
+<!-- CHART -->
+<canvas id="salesChart" width="400" height="200"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const revenue = Number("{{ total_revenue|default:0 }}");
+    const products = Number("{{ total_products|default:0 }}");
+    const sold = Number("{{ total_sold|default:0 }}");
+
+    const ctx = document.getElementById('salesChart');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Revenue', 'Products', 'Sold'],
+            datasets: [{
+                label: 'Overview',
+                data: [revenue, products, sold]
+            }]
+        }
+    });
+</script>
+
+{% endblock %}

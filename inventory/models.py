@@ -1,0 +1,59 @@
+from django.db import models
+from django.contrib.auth.models import User
+from PIL import Image
+
+
+class Jewelry(models.Model):
+    name = models.CharField(max_length=200)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+    image = models.ImageField(upload_to='jewelry_images/', null=True, blank=True)
+    category = models.CharField(max_length=100, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            img = Image.open(self.image.path)
+            img = img.resize((300, 300))
+            img.save(self.image.path)
+
+
+class Comment(models.Model):
+    item = models.ForeignKey(Jewelry, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Comment by {self.user.username}"
+
+
+class Like(models.Model):
+    item = models.ForeignKey(Jewelry, on_delete=models.CASCADE, related_name='likes')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Like by {self.user.username}"
+
+
+class Banner(models.Model):
+    BANNER_CHOICES = [
+        ('top', 'Top Banner'),
+        ('bottom1', 'Bottom Banner 1'),
+        ('bottom2', 'Bottom Banner 2'),
+        ('bottom3', 'Bottom Banner 3'),
+    ]
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200, blank=True, default='')
+    image = models.ImageField(upload_to='banners/')
+    banner_type = models.CharField(max_length=20, choices=BANNER_CHOICES, default='top')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.banner_type})"

@@ -1,0 +1,103 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+
+{% block content %}
+
+<h2>📰 Market News</h2>
+
+<style>
+.news-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+@media (max-width: 900px) {
+    .news-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.news-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transition: 0.2s;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+}
+
+.news-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.news-content {
+    padding: 12px;
+}
+
+.news-content h4 {
+    font-size: 15px;
+    margin: 0 0 8px;
+}
+
+.news-content p {
+    font-size: 13px;
+    color: #555;
+}
+
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    font-weight: bold;
+    color: #007bff;
+}
+</style>
+<script>
+const gold = Number("{{ gold_price|default:0 }}");
+const bitcoin = Number("{{ bitcoin_price|default:0 }}");
+
+const ctx = document.getElementById('marketChart');
+
+new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Gold', 'Bitcoin'],
+        datasets: [{
+            label: 'Market Prices',
+            data: [gold, bitcoin],
+            borderWidth: 2
+        }]
+    }
+});
+</script>
+
+<div class="news-grid">
+
+{% for a in articles %}
+    <div class="news-card">
+
+        {% if a.urlToImage %}
+            <img src="{{ a.urlToImage }}">
+        {% endif %}
+
+        <div class="news-content">
+            <h4>{{ a.title }}</h4>
+            <p>{{ a.description|default:"No description"|truncatewords:25 }}</p>
+
+            <a class="read-more" href="{{ a.url }}" target="_blank">
+                Read More →
+            </a>
+        </div>
+
+    </div>
+{% endfor %}
+
+</div>
+
+{% endblock %}

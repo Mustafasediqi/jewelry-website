@@ -1,0 +1,52 @@
+<!-- dashboard/templates/dashboard/banner_form.html -->
+{% extends 'dashboard/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mx-auto p-6">
+    <h2 class="text-2xl font-bold mb-4">{{ action }} Banner</h2>
+
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+
+        <!-- Display current image if exists -->
+        {% if form.instance.image %}
+            <div class="mb-4">
+                <label class="block font-semibold mb-1">Current Image:</label>
+                <img src="{{ form.instance.image.url }}" alt="Current Banner" class="h-32 object-contain border p-1 rounded">
+            </div>
+        {% endif %}
+
+        <!-- File input -->
+        <div>
+            {{ form.image.label_tag }}
+            {{ form.image }}
+        </div>
+
+        <!-- Other fields -->
+        <div>
+            {{ form.banner_type.label_tag }}
+            {{ form.banner_type }}
+        </div>
+
+        <div>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+        </div>
+
+        <div>
+            {{ form.subtitle.label_tag }}
+            {{ form.subtitle }}
+        </div>
+
+        <!-- Submit button -->
+        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded">
+            {{ action }}
+        </button>
+    </form>
+
+    <a href="{% url 'banner_list' %}" class="mt-4 inline-block text-blue-500 hover:underline">
+        ← Back to Banner List
+    </a>
+</div>
+{% endblock %}

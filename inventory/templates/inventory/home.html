@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jewelry Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Poppins', sans-serif; background: #fff; color: #111; }
+
+        /* ================= HERO ================= */
+        .hero-wrapper {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .hero-img {
+            height: 560px;
+            object-fit: cover;
+            width: 100%;
+            display: block;
+            animation: heroMotion 14s ease-in-out infinite alternate;
+            transform-origin: center center;
+        }
+
+        @keyframes heroMotion {
+            0%   { transform: scale(1)    translateX(0px);   }
+            30%  { transform: scale(1.05) translateX(-12px); }
+            60%  { transform: scale(1.08) translateX(10px);  }
+            100% { transform: scale(1.04) translateX(-6px);  }
+        }
+
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                105deg,
+                rgba(0, 0, 0, 0.62) 0%,
+                rgba(0, 0, 0, 0.30) 50%,
+                rgba(0, 0, 0, 0.05) 100%
+            );
+            display: flex;
+            align-items: center;
+            padding-left: 80px;
+        }
+
+        .hero-content {
+            opacity: 0;
+            animation: heroFadeUp 1.2s cubic-bezier(0.22, 1, 0.36, 1) 0.2s forwards;
+        }
+
+        @keyframes heroFadeUp {
+            0%   { opacity: 0; transform: translateY(36px); }
+            100% { opacity: 1; transform: translateY(0);    }
+        }
+
+        .hero-sub {
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 400;
+            letter-spacing: 6px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.70);
+            margin-bottom: 14px;
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.4rem;
+            font-weight: 700;
+            color: #fff;
+            line-height: 1.18;
+            margin-bottom: 36px;
+            text-shadow: 0 3px 20px rgba(0, 0, 0, 0.45);
+            max-width: 500px;
+        }
+
+        .hero-explore-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 38px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.10);
+            backdrop-filter: blur(16px) saturate(160%);
+            -webkit-backdrop-filter: blur(16px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.50);
+            outline: 1px solid rgba(255, 255, 255, 0.10);
+            outline-offset: 3px;
+            box-shadow:
+                0 4px 28px rgba(0, 0, 0, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.30),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+            transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.25s ease, outline-color 0.35s ease;
+            overflow: hidden;
+        }
+        .hero-explore-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -75%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.22) 50%, transparent 100%);
+            transform: skewX(-20deg);
+            transition: left 0.55s ease;
+        }
+        .hero-explore-btn:hover::before { left: 130%; }
+        .hero-explore-btn:hover {
+            background: rgba(255, 255, 255, 0.20);
+            color: #fff;
+            transform: translateY(-3px);
+            outline-color: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.40), inset 0 -1px 0 rgba(0, 0, 0, 0.10);
+        }
+        .hero-explore-btn .btn-arrow { display: inline-block; font-size: 14px; transition: transform 0.3s ease; }
+        .hero-explore-btn:hover .btn-arrow { transform: translateX(4px); }
+
+        /* ================= SECTION TITLE ================= */
+        .section-wrapper { text-align: center; margin-bottom: 50px; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; letter-spacing: 2px; color: #111; }
+        .section-sub { color: #999; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px; }
+        .divider { width: 50px; height: 1px; background: #111; margin: 15px auto; }
+
+        /* ================= BUTTONS ================= */
+        .btn-primary-custom {
+            display: inline-block;
+            padding: 9px 18px;
+            background: #111;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 2px solid #111;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .btn-primary-custom:hover { background: #fff; color: #111; }
+
+        .btn-outline-custom {
+            display: inline-block;
+            padding: 9px 18px;
+            background: #fff;
+            color: #111;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 2px solid #111;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .btn-outline-custom:hover { background: #111; color: #fff; }
+
+        /* ================= 2-ROW SLIDER ================= */
+        .slider-wrapper { position: relative; overflow: hidden; }
+        .slider-track {
+            display: grid;
+            grid-template-rows: repeat(2, auto);
+            grid-auto-flow: column;
+            grid-auto-columns: calc(100% / 4 - 12px);
+            gap: 16px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 10px 4px 20px;
+            scrollbar-width: none;
+        }
+        .slider-track::-webkit-scrollbar { display: none; }
+        .item-card .card { border: 1px solid #e8e8e8; border-radius: 0; transition: box-shadow 0.3s ease; height: 100%; }
+        .item-card .card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        .item-card .card-img-top { height: 180px; object-fit: cover; border-radius: 0; }
+        .item-card .card-body { padding: 15px; text-align: center; }
+        .item-card h6 { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 600; margin-bottom: 4px; color: #111; }
+        .item-card .price { font-size: 13px; color: #555; margin-bottom: 12px; }
+        .btn-group-custom { display: flex; gap: 6px; justify-content: center; }
+
+        /* ================= ARROW BUTTONS ================= */
+        .arrow-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 42px; height: 42px; border-radius: 50%;
+            border: 2px solid #111; background: #fff;
+            font-size: 20px; font-weight: bold; color: #111;
+            cursor: pointer; z-index: 10; transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .arrow-btn:hover { background: #111; color: #fff; }
+        .left-arrow { left: 0px; }
+        .right-arrow { right: 0px; }
+
+        /* ================= NEW BRANDS CAROUSEL ================= */
+        .brand-img { height: 500px; object-fit: cover; width: 100%; }
+        .brand-overlay {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white; text-align: center;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+        }
+        .brand-overlay h2 { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; }
+        .brand-overlay p { font-size: 15px; letter-spacing: 3px; }
+        .carousel-control-prev, .carousel-control-next { width: 5%; }
+
+        /* ================= FEATURED SHOPS — REDESIGNED ================= */
+        .featured-section {
+            background: #0e0e0e;
+            padding: 90px 60px 100px;
+            margin-top: 80px;
+        }
+
+        .featured-section .section-sub { color: #888; }
+        .featured-section .section-title { color: #fff; }
+        .featured-section .divider { background: #fff; opacity: 0.2; }
+
+        .featured-card-new {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .featured-card-new img {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.65s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: brightness(0.82);
+        }
+
+        .featured-card-new:hover img {
+            transform: scale(1.07);
+            filter: brightness(0.65);
+        }
+
+        /* bottom info bar */
+        .featured-card-info {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 28px 24px 24px;
+            background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+            transition: padding 0.35s ease;
+        }
+
+        .featured-card-new:hover .featured-card-info {
+            padding-bottom: 34px;
+        }
+
+        .featured-card-info h5 {
+            font-family: 'Playfair Display', serif;
+            font-size: 19px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+
+        .featured-card-info .fc-price {
+            font-size: 13px;
+            color: rgba(255,255,255,0.65);
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        /* buttons row — hidden until hover */
+        .featured-card-btns {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+
+        .featured-card-new:hover .featured-card-btns {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .fc-btn-outline {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #fff;
+            border: 1.5px solid rgba(255,255,255,0.55);
+            background: transparent;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        .fc-btn-outline:hover {
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        .fc-btn-solid {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: #111;
+            background: #fff;
+            border: 1.5px solid #fff;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        .fc-btn-solid:hover {
+            background: transparent;
+            color: #fff;
+        }
+
+        /* ================= FOOTER ================= */
+        .footer { background-color: #111; color: #fff; padding: 60px 40px 30px; }
+        .footer a { color: #aaa; text-decoration: none; transition: all 0.3s ease; display: block; margin: 6px 0; font-size: 13px; }
+        .footer a:hover { color: #fff; transform: translateX(3px); }
+        .footer h4 { font-family: 'Playfair Display', serif; font-size: 16px; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 2px; color: #fff; }
+        .footer-columns { display: flex; flex-wrap: wrap; gap: 50px; }
+        .footer-column { min-width: 150px; }
+        .social-icons { display: flex; gap: 15px; margin-top: 15px; }
+        .social-icons img { height: 28px; width: 28px; filter: brightness(0) invert(0.6); transition: all 0.3s ease; cursor: pointer; }
+        .social-icons img:hover { filter: brightness(0) invert(1); transform: scale(1.1); }
+        .footer-bottom { margin-top: 50px; border-top: 1px solid #222; padding-top: 20px; font-size: 12px; text-align: center; color: #555; letter-spacing: 1px; }
+    </style>
+</head>
+
+<body>
+{% load static %}
+{% include 'inventory/partials/navbar.html' %}
+
+<!-- ================= HERO ================= -->
+<div class="hero-wrapper">
+    {% if top_banner %}
+        <img src="{{ top_banner.image.url }}" class="hero-img" alt="{{ top_banner.title }}">
+    {% else %}
+        <img src="{% static 'images/DD.jpg' %}" class="hero-img" alt="Main Banner">
+    {% endif %}
+    <div class="hero-overlay">
+        <div class="hero-content">
+            <p class="hero-sub">
+                {% if top_banner %}{{ top_banner.subtitle }}{% else %}Luxury & Elegance{% endif %}
+            </p>
+            <h1 class="hero-title">
+                {% if top_banner %}{{ top_banner.title }}{% else %}Fine Jewelry Collection{% endif %}
+            </h1>
+            <a href="{% url 'inventory_collection' %}" class="hero-explore-btn">
+                Explore
+                <span class="btn-arrow">&#8594;</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- ================= OUR JEWELRY ================= -->
+<div class="container-fluid mt-5 px-5">
+    <div class="section-wrapper">
+        <div class="section-sub">Luxury Collection</div>
+        <div class="section-title">Our Jewelry</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="slider-wrapper px-5">
+        <button class="arrow-btn left-arrow" onclick="slideLeft()">&#8249;</button>
+        <button class="arrow-btn right-arrow" onclick="slideRight()">&#8250;</button>
+
+        <div id="itemSlider" class="slider-track">
+            {% for item in items %}
+            <div class="item-card">
+                <div class="card shadow-sm">
+                    {% if item.image %}
+                    <img src="{{ item.image.url }}" class="card-img-top">
+                    {% else %}
+                    <img src="{% static 'images/mm.jpg' %}" class="card-img-top">
+                    {% endif %}
+                    <div class="card-body">
+                        <h6>{{ item.name }}</h6>
+                        <p class="price">${{ item.price }}</p>
+                        <div class="btn-group-custom">
+                            <a href="{% url 'inventory_details' item.id %}" class="btn-outline-custom">Details</a>
+                            <a href="{% url 'checkout' item.id %}" class="btn-primary-custom">Buy Now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- ================= NEW BRANDS ================= -->
+<div class="container-fluid mt-5 p-0">
+    <div class="section-wrapper mt-5 px-5">
+        <div class="section-sub">Premium Diamonds</div>
+        <div class="section-title">New Brands</div>
+        <div class="divider"></div>
+    </div>
+
+    <div id="brandCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            {% for banner in bottom_banners %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %} position-relative">
+                <img src="{{ banner.image.url }}" class="brand-img" alt="{{ banner.title }}">
+                <div class="brand-overlay">
+                    <h2>{{ banner.title }}</h2>
+                    <p>{{ banner.subtitle }}</p>
+                </div>
+            </div>
+            {% empty %}
+            <div class="carousel-item active position-relative">
+                <img src="{% static 'images/DD.jpg' %}" class="brand-img" alt="Default Banner">
+                <div class="brand-overlay">
+                    <h2>Our Collection</h2>
+                    <p>Discover our latest arrivals</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#brandCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#brandCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" style="background-color: rgba(0,0,0,0.5); border-radius: 50%; padding: 15px;"></span>
+        </button>
+    </div>
+</div>
+
+<!-- ================= FEATURED SHOPS — REDESIGNED ================= -->
+<div class="featured-section">
+    <div class="section-wrapper">
+        <div class="section-sub">Exclusive Collections</div>
+        <div class="section-title">Featured Shops</div>
+        <div class="divider"></div>
+    </div>
+
+    <div class="row g-3">
+        {% for item in items|slice:":3" %}
+        <div class="col-md-4">
+            <div class="featured-card-new">
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                {% else %}
+                    <img src="{% static 'images/mm.jpg' %}" alt="{{ item.name }}">
+                {% endif %}
+                <div class="featured-card-info">
+                    <h5>{{ item.name }}</h5>
+                    <p class="fc-price">${{ item.price }}</p>
+                    <div class="featured-card-btns">
+                        <a href="{% url 'inventory_details' item.id %}" class="fc-btn-outline">Details</a>
+                        <a href="{% url 'checkout' item.id %}" class="fc-btn-solid">Buy Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+    <div class="footer-columns">
+        <div class="footer-column">
+            <h4>Customer Service</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Delivery & Pick Up</a>
+            <a href="#">Return & Exchange Policy</a>
+            <a href="#">Jewelry Services</a>
+            <a href="#">Military Discount</a>
+        </div>
+        <div class="footer-column">
+            <h4>Orders & Payments</h4>
+            <a href="#">Order Status</a>
+            <a href="#">Protection Plans</a>
+            <a href="#">Price Match Policy</a>
+            <a href="#">Vault Rewards</a>
+        </div>
+        <div class="footer-column">
+            <h4>Company</h4>
+            <a href="#">About Us</a>
+            <a href="#">Who We Are</a>
+            <a href="#">Careers</a>
+            <a href="#">Conflict-Free Sourcing</a>
+            <a href="#">Corporate Responsibility</a>
+        </div>
+        <div class="footer-column">
+            <h4>Education & Guides</h4>
+            <a href="#">Jewelry 101</a>
+            <a href="#">Diamonds</a>
+            <a href="#">Engagement Guide</a>
+            <a href="#">Gemstones</a>
+            <a href="#">Birthstone Guide</a>
+            <a href="#">Watch Buying Guide</a>
+            <a href="#">Jewelry Care & Cleaning</a>
+            <a href="#">Jewelry Glossary</a>
+        </div>
+        <div class="footer-column">
+            <h4>Payment Options</h4>
+            <a href="#">Zales Credit Card</a>
+            <a href="#">Learn More / Apply Now</a>
+            <a href="#">Affirm</a>
+            <a href="#">Gift Card</a>
+            <div class="social-icons">
+                <a href="https://www.facebook.com" target="_blank"><img src="{% static 'images/facebook.png' %}" alt="Facebook"></a>
+                <a href="https://www.instagram.com" target="_blank"><img src="{% static 'images/instagram.png' %}" alt="Instagram"></a>
+                <a href="https://www.tiktok.com" target="_blank"><img src="{% static 'images/tiktok.png' %}" alt="TikTok"></a>
+                <a href="https://www.twitter.com" target="_blank"><img src="{% static 'images/twitter.png' %}" alt="Twitter"></a>
+                <a href="https://www.pinterest.com" target="_blank"><img src="{% static 'images/pinterest.png' %}" alt="Pinterest"></a>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">&copy; 2026 Your Jewelry Store. All Rights Reserved.</div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const slider = document.getElementById('itemSlider');
+    const cardWidth = slider.querySelector('.item-card').offsetWidth + 16;
+    function slideLeft()  { slider.scrollBy({ left: -(cardWidth * 4), behavior: 'smooth' }); }
+    function slideRight() { slider.scrollBy({ left:  (cardWidth * 4), behavior: 'smooth' }); }
+</script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <style>
+        body {
+        margin: 0;
+        height: 100vh;
+        font-family: "Segoe UI", sans-serif;
+        display: flex;
+    }
+
+    .container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+    }
+
+    /* LEFT SIDE IMAGE */
+    .left-side {
+        flex: 1;
+        background: url('{% static "images/signup_imag.jpg" %}') center/cover no-repeat;
+    }
+
+    /* RIGHT SIDE FORM */
+    .right-side {
+        flex: 1;
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .signup-box {
+        width: 360px;
+        padding: 35px;
+        background: #111;
+        border-radius: 14px;
+        text-align: center;
+        box-shadow: 0 0 15px rgba(255,255,255,0.1);
+    }
+
+    .signup-box h2 {
+        margin-bottom: 25px;
+        font-weight: 600;
+        color: #fff;
+    }
+
+    .signup-box input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 14px;
+        border-radius: 8px;
+        border: 1px solid #333;
+        background: #222;
+        color: #fff;
+        font-size: 14px;
+    }
+
+    .signup-box input::placeholder {
+        color: #aaa;
+    }
+
+    .signup-box input:focus {
+        outline: none;
+        border-color: #888;
+        box-shadow: 0 0 8px rgba(255,255,255,0.2);
+    }
+
+    /* MAIN SIGN UP BUTTON */
+    .signup-box button {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        background: #fff;
+        color: #000;
+        transition: 0.3s ease;
+    }
+
+    .signup-box button:hover {
+        background: #e6e6e6;
+        transform: translateY(-2px);
+    }
+
+    .error {
+        color: #ff5555;
+        margin-bottom: 12px;
+        font-size: 14px;
+    }
+
+    /* GOOGLE BUTTON — FIXED */
+    .google-btn {
+        display: inline-block;
+        width: 100%;
+        padding: 12px;
+        margin-top: 12px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        text-align: center;
+        border: 1px solid #555;
+        background: transparent;
+        color: #fff;
+        transition: 0.3s ease;
+    }
+
+    .google-btn:hover {
+        background: #222;
+        border-color: #888;
+    }
+
+    .signup-box p {
+        margin-top: 14px;
+        font-size: 14px;
+    }
+
+    .signup-box a {
+        color: #ccc;
+        text-decoration: none;
+    }
+
+    .signup-box a:hover {
+        color: #fff;
+    }
+</style>
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="left-side"></div>
+    <div class="right-side">
+        <div class="signup-box">
+            <h2>Create Account</h2>
+
+            {% if error %}
+                <div class="error">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password2" placeholder="Confirm Password" required>
+
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <!-- Google Signup Button -->
+            <!-- Change '#' to your actual Google OAuth URL when ready -->
+            <a href="#" class="google-btn">Sign up with Google</a>
+
+            <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
