@@ -1,10 +1,14 @@
-﻿{
+{
   "builds": [
-    { "src": "jewelry_site/wsgi.py", "use": "@vercel/python" },
-    { "src": "static/**", "use": "@vercel/static" }
+    {
+      "src": "jewelry_site/wsgi.py",
+      "use": "@vercel/python"
+    }
   ],
   "routes": [
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/(.*)", "dest": "jewelry_site/wsgi.py" }
+    {
+      "src": "/(.*)",
+      "dest": "jewelry_site/wsgi.py"
+    }
   ]
 }
