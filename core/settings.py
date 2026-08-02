@@ -139,5 +139,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_URL = '/accounts/login/'
 
-STRIPE_PUBLIC_KEY = 'pk_test_...'
-STRIPE_SECRET_KEY = 'sk_test_51TM4sEGeAkG29xEkDfXYKmFNmfMrJLyJc8XlWv7WeFJUr6Yh3IC9gc0e1TI128qgFqJsaUEoAxaDfXfmsO3XhgIl00UFhpdji0'
+STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
+STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
