@@ -57,13 +57,27 @@ class Like(models.Model):
 
 
 class Banner(models.Model):
-    ...
+    BANNER_CHOICES = [
+        ('top', 'Top Banner'),
+        ('bottom1', 'Bottom Banner 1'),
+        ('bottom2', 'Bottom Banner 2'),
+        ('bottom3', 'Bottom Banner 3'),
+    ]
+    title = models.CharField(max_length=200)
+    subtitle = models.CharField(max_length=200, blank=True, default='')
+    image = models.ImageField(upload_to='banners/')
+    banner_type = models.CharField(max_length=20, choices=BANNER_CHOICES, default='top')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.banner_type})"
+
     def save(self, *args, **kwargs):
         if self.image:
             img = Image.open(self.image)
             if img.mode in ('RGBA', 'P'):
                 img = img.convert('RGB')
-            img.thumbnail((1600, 1600))  # cap max dimension, keep aspect ratio
+            img.thumbnail((1600, 1600))
             buffer = BytesIO()
             img.save(buffer, format='JPEG', quality=85)
             buffer.seek(0)
