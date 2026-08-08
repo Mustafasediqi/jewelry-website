@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 
 class Jewelry(models.Model):
@@ -16,11 +18,23 @@ class Jewelry(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.image:
-            img = Image.open(self.image.path)
+        if self.pk:
+            old = Jewelry.objects.filter(pk=self.pk).first()
+            image_changed = old is None or old.image != self.image
+        else:
+            image_changed = bool(self.image)
+
+        if self.image and image_changed:
+            img = Image.open(self.image)
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
             img = img.resize((300, 300))
-            img.save(self.image.path)
+            buffer = BytesIO()
+            img.save(buffer, format='JPEG', quality=85)
+            buffer.seek(0)
+            self.image = ContentFile(buffer.read(), name=self.image.name)
+
+        super().save(*args, **kwargs)
 
 
 class Comment(models.Model):

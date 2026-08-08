@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'inventory',
     'accounts',
     'dashboard',
@@ -80,13 +81,28 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL'),
-        conn_max_age=0,
-        ssl_require=True
-    )
-}
+# Set USE_LOCAL_DB=1 in your environment (or .env file) to run against a
+# local Postgres instance instead of Neon. Leave unset in production/Vercel
+# so it keeps using Neon via DATABASE_URL.
+if config('USE_LOCAL_DB', default=False, cast=bool):
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('LOCAL_DB_NAME', default='website_dev'),
+            'USER': config('LOCAL_DB_USER', default='postgres'),
+            'PASSWORD': config('LOCAL_DB_PASSWORD', default='postgres'),
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+else:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=config('DATABASE_URL'),
+            conn_max_age=0,
+            ssl_require=True
+        )
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
@@ -125,19 +141,34 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
-# Optional: For production collectstatic
-# STATIC_ROOT = BASE_DIR / "staticfiles"
+# For production collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
+# Media files -> Supabase Storage (S3-compatible)
+AWS_ACCESS_KEY_ID = config('SUPABASE_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('SUPABASE_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('SUPABASE_STORAGE_BUCKET')
+AWS_S3_ENDPOINT_URL = config('SUPABASE_S3_ENDPOINT')
+AWS_S3_REGION_NAME = config('SUPABASE_S3_REGION')
+AWS_DEFAULT_ACL = None
+AWS_S3_FILE_OVERWRITE = True
+AWS_QUERYSTRING_AUTH = False
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_S3_CUSTOM_DOMAIN = f"{config('SUPABASE_PROJECT_REF')}.supabase.co/storage/v1/object/public/{config('SUPABASE_STORAGE_BUCKET')}"
 
-from pathlib import Path
-BASE_DIR = Path(__file__).resolve().parent.parent
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_URL = '/accounts/login/'
 
 STRIPE_PUBLIC_KEY = config('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = config('STRIPE_SECRET_KEY')
