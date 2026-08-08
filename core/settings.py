@@ -104,6 +104,12 @@ else:
         )
     }
 
+# Defensive fix: strip stray whitespace from channel_binding/sslmode
+# (Vercel/env sources can inject trailing spaces into query-string values)
+if 'OPTIONS' in DATABASES['default']:
+    for key, value in DATABASES['default']['OPTIONS'].items():
+        if isinstance(value, str):
+            DATABASES['default']['OPTIONS'][key] = value.strip()
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
